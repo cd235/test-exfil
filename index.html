@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload File to Azure Blob Storage</title>
+</head>
+<body>
+    <h1>Upload File to Azure Blob Storage</h1>
+    <form id="uploadForm">
+        <input type="file" id="fileInput" />
+        <button type="submit">Upload</button>
+    </form>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const fileInput = document.getElementById('fileInput');
+            if (fileInput.files.length === 0) {
+                alert('Please select a file.');
+                return;
+            }
+
+            const file = fileInput.files[0];
+
+            // Use your provided URL (SAS token included) for the blob upload endpoint
+            const blobUrl = "https://testajhjauishui1.blob.core.windows.net/difca-test/test.docx?sp=racw&st=2025-04-27T11:48:40Z&se=2025-04-30T19:48:40Z&spr=https&sv=2024-11-04&sr=c&sig=Uk3m99mt7WBJ9%2BLwczyF1wN13zM2ftrGwLMG8XTfFtI%3D";
+
+            uploadFileToAzureBlob(blobUrl, file);
+        });
+
+        function uploadFileToAzureBlob(blobUrl, file) {
+            const xhr = new XMLHttpRequest();
+            xhr.open('PUT', blobUrl, true);
+            xhr.setRequestHeader('x-ms-blob-type', 'BlockBlob');
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 201) {
+                        alert('File uploaded successfully!');
+                    } else {
+                        alert('Failed to upload file.');
+                    }
+                }
+            };
+            xhr.send(file);
+        }
+    </script>
+</body>
+</html>
